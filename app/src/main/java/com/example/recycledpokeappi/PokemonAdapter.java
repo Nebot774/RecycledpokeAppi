@@ -73,6 +73,11 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         this.pokemonList = pokemonList;
     }
 
+    //Metodo para obtener un Pokemon en una posicion especifica
+    public Pokemon getPokemonAtPosition(int position) {
+        return pokemonList.get(position);
+    }
+
 
 }
 

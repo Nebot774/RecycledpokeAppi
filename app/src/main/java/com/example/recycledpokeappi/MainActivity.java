@@ -1,9 +1,12 @@
 package com.example.recycledpokeappi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +39,30 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.It
         adapter = new PokemonAdapter(this, pokemonList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+        // Creación del objeto ItemTouchHelper.SimpleCallback
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                // No es necesario manejar movimientos en este caso
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // Maneja el evento de arrastre
+                int position = viewHolder.getAdapterPosition(); // Obtiene la posición del elemento deslizado
+                Pokemon pokemon = adapter.getPokemonAtPosition(position); // Obtiene el Pokémon en esa posición
+                mostrarDetalle(pokemon); // Llama al método para mostrar los detalles
+            }
+        };
+
+// Adjunta el ItemTouchHelper al RecyclerView
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+
 
         // Cargar los datos
         cargarDatos();
@@ -76,6 +103,21 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.It
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
     }
+
+    //metodo para manejar la transacion a la actividad de detalles
+    private void mostrarDetalle(Pokemon pokemon) {
+        // Crea un Intent para iniciar DetailActivity
+        Intent intent = new Intent(this, DetailActivity.class);
+
+        // Pasa el nombre del Pokémon a DetailActivity
+        intent.putExtra("pokemon_name", pokemon.getName());
+
+        // Inicia la actividad
+        startActivity(intent);
+    }
+
+
+
 
 }
 
