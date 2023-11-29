@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.It
                 int position = viewHolder.getAdapterPosition(); // Obtiene la posición del elemento deslizado
                 Pokemon pokemon = adapter.getPokemonAtPosition(position); // Obtiene el Pokémon en esa posición
                 mostrarDetalle(pokemon); // Llama al método para mostrar los detalles
+
+                // Importante: Notifica al adaptador que el elemento no se ha eliminado
+                adapter.notifyItemChanged(position);
             }
         };
 
